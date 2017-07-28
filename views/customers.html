@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>客户身份认证</title>
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+    <script src="http://cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
+    <script src="/javascripts/udesk_sha1.js"></script>
+    <style type="text/css">
+    	* {
+    		margin: 0px;
+    		padding: 0px;
+    		list-style: none;
+    	}
+    </style>
+</head>
+
+<body style="height: 100%">
+	<div class="">
+        <div>
+            <a target="_blank" href="/" class="label label-success label-ali">1、网页插件基础配置</a>
+            <p></p>
+            <a target="_blank" href="/customers" class="label label-default label-ali">2、客户身份认证</a>
+            <p></p>
+            <a target="_blank" href="/weixin_api" class="label label-primary label-ali">3、微信API</a>
+        </div>
+	    <h2 class="text-center">客户身份认证Demo</h2>
+	    <br>
+        <p class="text-center"> * 客户身份的识别顺序: <span style="color: red;">c_email -> c_phone -> web_token</span>。客户身份识别有效时间: <span style="color: red;">1小时。</span></p>
+        <br>
+	    <form class="form-horizontal">
+	        <div class="row">
+	            <div class="col-md-6 col-sm-12 col-md-offset-2">
+	                <div class="form-group">
+	                    <label class="col-sm-3 control-label">公司域名: </label>
+	                    <div class="col-sm-6">
+	                        <input type="text" name="company_domain" value="<%= company_res['company_domain'] %>" class="form-control" placeholder="公司域名">
+	                    </div>
+	                    <span class="col-sm-3" style="color: red; line-height: 30px;">* 必填</span>
+	                </div>
+	                <div class="form-group">
+	                    <label class="col-sm-3 control-label">公司Code: </label>
+	                    <div class="col-sm-6">
+	                        <input type="text" name="company_code" value="<%= company_res['company_code'] %>" class="form-control" placeholder="公司code">
+	                    </div>
+	                    <span class="col-sm-3" style="color: red; line-height: 30px;">* 必填</span>
+	                </div>
+	                 <div class="form-group">
+	                    <label class="col-sm-3 control-label">插件ID: </label>
+	                    <div class="col-sm-6">
+	                        <input type="text" name="web_plugin_id" value="<%= company_res['web_plugin_id'] %>" class="form-control" placeholder="插件ID">
+	                    </div>
+	                </div>
+	                <div class="form-group">
+	                    <label class="col-sm-3 control-label">Web-token: </label>
+	                    <div class="col-sm-6">
+	                        <input type="text" value="<%= company_res['web_token'] %>" name="web-token" class="form-control" placeholder="web-token">
+	                    </div>
+	                    <span class="col-sm-3" style="color: red; line-height: 30px;">* 必填</span>
+	                </div>
+	                <p class="text-tip col-sm-offset-3" style="font-size: 12px; color: #aaa; position: relative; top: -10px; padding-left: 10px;">客户唯一标识，推荐使用邮箱、手机号等</p>
+	                <div class="form-group">
+	                    <label class="col-sm-3 control-label">Im_user_key: </label>
+	                    <div class="col-sm-6">
+	                        <input type="text" value="<%= company_res['im_user_key'] %>" name="user-key" class="form-control" placeholder="im_user_key">
+	                    </div>
+	                    <span class="col-sm-3" style="color: red; line-height: 30px;">* 必填</span>
+	                </div>
+	                <p class="text-tip col-sm-offset-3" style="font-size: 12px; color: #aaa; position: relative; top: -10px; padding-left: 10px;">im_user_key获取位置【管理中心-即时通讯-网页插件-管理/添加客户信息中的KEY】</p>
+	                <div class="form-group">
+	                    <label class="col-sm-3 control-label">随机数: </label>
+	                    <div class="col-sm-4">
+	                        <input type="text" name="nonce" value="<%= company_res['nonce'] %>" disabled="disabled" class="form-control" placeholder="随机数">
+	                    </div>
+	                </div>
+	                <div class="form-group">
+	                    <label class="col-sm-3 control-label">时间戳: </label>
+	                    <div class="col-sm-4">
+	                        <input type="text" name="timestamp" value="<%= company_res['timestamp'] %>" disabled="disabled" class="form-control" placeholder="时间戳">
+	                    </div>
+	                </div>
+	                <div class="alert alert-warning text-center" id="error" style="width: 100%; display: none;">
+	                    web-token 和 im-user-key 为必填项!
+	                </div>
+	                <div class="form-group">
+	                    <label class="col-sm-3 control-label">Signature: </label>
+	                    <div class="col-sm-7">
+	                        <input type="text" name="signature" value="<%= company_res['signature'] %>" disabled="disabled" class="form-control" placeholder="signature">
+	                    </div>
+	                </div>
+	                <div class="form-group">
+	                    <div class="col-sm-4 col-sm-offset-4">
+	                        <input type="button" class="form-control btn-success"  id="btn-customer" value="生成可内嵌的customer信息">
+	                    </div>
+	                </div>
+	                <div class="form-group">
+                        <div class="col-sm-4 col-sm-offset-4">
+                            <input type="button" class="form-control btn-success"  id="btn-load" value="加载基础配置">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-4 col-sm-offset-4">
+                            <input type="button" class="form-control btn-success"  id="btn-clear" value="清理基础配置">
+                        </div>
+                    </div>
+	                <div class="col-sm-offset-1">
+                    <p class="" style="color: #aaa; ">独立窗口模式</p>
+                    <pre class="" id="blank_url" style="display: none;"></pre>
+                    </div>
+                    <br>
+	                <div class="col-sm-offset-1">
+                    <p class="" style="color: #aaa; ">内嵌连接模式</p>
+		                <pre class="" id="pre" style="display: none;"></pre>
+	                </div>
+	            </div>
+	            <!-- <div class="col-md-6 col-sm-12"></div> -->
+	        </div>
+	    </form>
+	</div>
+    <script type="text/javascript">
+
+    $(function() {
+        $("#btn-nonce").on('click', function() {
+            $("input[name=nonce]").val(Math.random().toString(16).substring(2, 14));
+        });
+        $("#btn-time").on('click', function() {
+            $("input[name=timestamp]").val(new Date().getTime());
+        });
+        $("#btn-sign").on('click', function() {
+            var nonce = $("input[name=nonce]").val();
+            var timestamp = $("input[name=timestamp]").val();
+            var web_token = $("input[name=web-token]").val();
+            var im_user_key = $("input[name=user-key]").val();
+            if (!web_token) {
+                $("input[name=web-token]").css('border', "1px solid red");
+                alert("web-token 和 im-user-key 为必填项!")
+                return;
+            } else {
+                $("input[name=web-token]").css('border', "1px solid #ccc");
+            }
+            if (!im_user_key) {
+                $("input[name=user-key]").css('border', "1px solid red");
+                alert("web-token 和 im-user-key 为必填项!")
+                return;
+            } else {
+                $("input[name=user-key]").css('border', "1px solid #ccc");
+            }
+
+            if (!nonce || !timestamp) {
+                $("#btn-nonce").click();
+                $("#btn-time").click();
+            }
+            var signature = getSha1("nonce=" + nonce + "&timestamp=" + timestamp + "&web_token=" + web_token + "&" + im_user_key).toUpperCase();
+            $("input[name=signature]").val(signature);
+        });
+
+        $("#btn-customer").on('click', function() {
+            var company_domain = $("input[name=company_domain]").val();
+            var company_code = $("input[name=company_code]").val();
+            var nonce = $("input[name=nonce]").val();
+            var timestamp = $("input[name=timestamp]").val();
+            var web_token = $("input[name=web-token]").val();
+            var signature = $("input[name=signature]").val();
+            var im_user_key = $("input[name=user-key]").val();
+            var web_plugin_id = $("input[name=web_plugin_id]").val();
+            if (!web_token) {
+                $("input[name=web-token]").css('border', "1px solid red");
+                alert("web-token 和 im-user-key 为必填项!")
+                return;
+            } else {
+                $("input[name=web-token]").css('border', "1px solid #ccc");
+            }
+            if (!company_domain) {
+                $("input[name=company_domain]").css('border', "1px solid red");
+                alert("公司域名为必填项!")
+                return;
+            } else {
+                $("input[name=company_domain]").css('border', "1px solid #ccc");
+            }
+
+             if (!company_code) {
+                $("input[name=company_code]").css('border', "1px solid red");
+                alert("公司Code为必填项!")
+                return;
+            } else {
+                $("input[name=company_code]").css('border', "1px solid #ccc");
+            }
+
+            if (!im_user_key) {
+                $("input[name=user-key]").css('border', "1px solid red");
+                alert("web-token 和 im-user-key 为必填项!")
+                return;
+            } else {
+                $("input[name=user-key]").css('border', "1px solid #ccc");
+            }
+            if (!signature) {
+                alert("必须先获取加密信息!");
+                return;
+            }
+            var url = `http://${company_domain}/im_client?web_plugin_id=${web_plugin_id}&c_desc=test123456789&nonce=${nonce}&signature=${signature}&timestamp=${timestamp}&web_token=${web_token}`;
+		            var str =
+`(function(a,h,c,b,f,g){a["UdeskApiObject"]=f;a[f]=a[f]||function(){(a[f].d=a[f].d||[]).push(arguments)};g=h.createElement(c);g.async=1;g.src=b;c=h.getElementsByTagName(c)[0];c.parentNode.insertBefore(g,c)})(window,document,"script","http://${company_domain}.udesk.cn/im_client/js/udeskApi.js","ud");
+ud({
+	 "code": "${company_code}",
+   "mode": "inner",
+   "pos_flag": "hrb",
+   "isInvite": false,
+   "link": "http://${company_domain}/im_client",
+   "customer": {
+	   "nonce": "${nonce}",
+	   "signature": "${signature}",
+	   "timestamp": "${timestamp}",
+	   "web_token": "${web_token}"
+	}
+})`;
+            $("#blank_url").text(url).show();
+            $("#pre").text(str).show();
+        });
+
+         // 加载配置
+        var storeKey = "configCode";
+        var storeUrl = "configUrl";
+        $("#btn-load").click(function() {
+            var pre = $("#pre").text();
+            var blank_url = $("#blank_url").text();
+            pre_code = $.trim(pre);
+            if (!pre_code) {
+                return alert("请先生成配置");
+            }
+            localStorage[storeKey] = pre_code;
+            localStorage[storeUrl] = blank_url;
+            location.reload();
+        });
+        // 清理配置
+        $("#btn-clear").click(function() {
+            $("#pre").text("").show();
+            localStorage[storeKey] = "";
+            location.reload();
+        });
+
+        if (localStorage[storeKey]) {
+            $("#pre").text(localStorage[storeKey]).show();
+            $("#blank_url").text(localStorage[storeUrl]).show();
+            $.globalEval(localStorage[storeKey].replace(/<[\/]?script>/img, ""));
+        }
+        console.log(localStorage)
+    })
+    </script>
+</body>
+
+</html>

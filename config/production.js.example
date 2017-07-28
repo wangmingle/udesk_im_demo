@@ -1,0 +1,7 @@
+{
+    "company_domain": "当前公司的域名",
+    "company_code": "公司code 【管理中心-即时通讯-网页插件-管理/code】",
+    "web_plugin_id": "插件ID 【管理中心-即时通讯-网页插件-管理/web_plugin_id】",
+    "im_user_key": " // 获取位置【管理中心-即时通讯-网页插件-管理/添加客户信息中的KEY】",
+    "secret": "获取位置【管理中心-即时通讯-消息接口接入-KEY】"
+}

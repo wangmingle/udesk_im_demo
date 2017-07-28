@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>微信API</title>
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+    <script src="http://cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
+    <script src="/javascripts/udesk_sha1.js"></script>
+    <style type="text/css">
+    	* {
+    		margin: 0px;
+    		padding: 0px;
+    		list-style: none;
+    	}
+    </style>
+</head>
+
+<body style="height: 100%">
+	<div class="">
+        <div>
+            <a target="_blank" href="/" class="label label-success label-ali">1、网页插件基础配置</a>
+            <p></p>
+            <a target="_blank" href="/customers" class="label label-default label-ali">2、客户身份认证</a>
+            <p></p>
+            <a target="_blank" href="/weixin_api" class="label label-primary label-ali">3、微信API</a>
+        </div>
+	    <h2 class="text-center">微信API Demo</h2>
+	    <br>
+	    <form class="form-horizontal">
+	        <div class="row">
+	            <div class="col-md-6 col-sm-12 col-md-offset-2">
+	                <div class="form-group">
+	                    <label class="col-sm-3 control-label">公司域名: </label>
+	                    <div class="col-sm-6">
+	                        <input type="text" name="company_domain" value="<%= company_res['company_domain'] %>" class="form-control" placeholder="公司域名">
+	                    </div>
+	                    <span class="col-sm-3" style="color: red; line-height: 30px;">* 必填</span>
+	                </div>
+	                <div class="form-group">
+	                    <label class="col-sm-3 control-label">邮箱(email): </label>
+	                    <div class="col-sm-6">
+	                        <input type="text" name="email" value="<%= company_res['email'] %>" class="form-control" placeholder="公司code">
+	                    </div>
+	                </div>
+	                 <div class="form-group">
+	                    <label class="col-sm-3 control-label">手机号(number): </label>
+	                    <div class="col-sm-6">
+	                        <input type="text" name="number" value="<%= company_res['number']  %>" class="form-control" placeholder="插件ID">
+	                    </div>
+	                </div>
+	                <div class="form-group">
+	                    <label class="col-sm-3 control-label">时间戳: </label>
+	                    <div class="col-sm-4">
+	                        <input type="text" name="timestamp" value="<%= company_res['timestamp'] %>" disabled="disabled" class="form-control" placeholder="时间戳">
+                        </div>
+                    </div>
+                    <p class="text-tip col-sm-offset-3" style="font-size: 12px; color: #aaa; position: relative; top: -10px; padding-left: 10px;">YYYYMMDDHHmmss</p>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">secret: </label>
+                        <div class="col-sm-6">
+                            <input type="text" value="<%= company_res['secret'] %>" name="secret" disabled="disabled" class="form-control" placeholder="secret">
+                        </div>
+                    </div>
+                    <h5 class="page-header"></h5>
+                    <p class="text-tip" style="font-size: 16px; color: #aaa; position: relative; padding-left: 0px;">微信信息</p>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">FromUserName: </label>
+                        <div class="col-sm-6">
+                            <input type="text" value="<%= company_res['open_id'] %>" name="open_id" class="form-control" placeholder="FromUserName">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">MsgId: </label>
+                        <div class="col-sm-6">
+                            <input type="text" value="<%= company_res['message_id'] %>" disabled="disabled" name="message_id" class="form-control" placeholder="MsgId">
+                        </div>
+                        <div class="col-sm-2">
+                            <input type="button" class="form-control" id="btn_msg_id" value="生成">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Content: </label>
+                        <div class="col-sm-6">
+                            <input type="text" value="<%= company_res['content'] %>" name="content" class="form-control" placeholder="Content">
+                        </div>
+                    </div>
+                      <div class="form-group">
+                        <label class="col-sm-3 control-label">CreateTime: </label>
+                        <div class="col-sm-6">
+                            <input type="text" value="<%= company_res['create_time'] %>" disabled="disabled" name="create_time" class="form-control" placeholder="CreateTime">
+                        </div>
+                        <div class="col-sm-2">
+                            <input type="button" class="form-control" id="btn_time" value="生成">
+                        </div>
+                    </div>
+	                <div class="form-group">
+	                    <div class="col-sm-4 col-sm-offset-4">
+	                        <input type="button" class="form-control btn-success"  id="btn_message" value="生成消息体">
+	                    </div>
+	                </div>
+                    <div class="form-group">
+                        <div class="col-sm-4 col-sm-offset-4">
+                            <input type="button" class="form-control btn-success"  id="btn_send_message" value="发送消息">
+                        </div>
+                    </div>
+	                <div class="col-sm-offset-1">
+                    <p class="" style="color: #aaa; ">文本消息</p>
+                    <pre class="" id="text_message" style="display: none;"></pre>
+                    </div>
+                    <br>
+	                <div class="col-sm-offset-1">
+                    <p class="" style="color: #aaa; ">发送结果</p>
+		                <pre class="" id="pre" style="display: none;"></pre>
+	                </div>
+	            </div>
+	            <!-- <div class="col-md-6 col-sm-12"></div> -->
+	        </div>
+	    </form>
+	</div>
+    <script type="text/javascript">
+
+    $(function() {
+        $("#btn_message").on('click', function() {
+            var company_domain = $("input[name=company_domain]").val();
+            var timestamp = $("input[name=timestamp]").val();
+            var secret = $("input[name=secret]").val();
+            var email = $("input[name=email]").val();
+            var number = $("input[name=number]").val();
+            var message_id = $("input[name=message_id]").val();
+            var open_id = $("input[name=open_id]").val();
+            var content = $("input[name=content]").val();
+            var create_time = $("input[name=create_time]").val() || new Date().getTime();
+            if (!company_domain) {
+                $("input[name=company_domain]").css('border', "1px solid red");
+                alert("公司域名为必填项!")
+                return;
+            } else {
+                $("input[name=company_domain]").css('border', "1px solid #ccc");
+            }
+            if (!secret) {
+                alert("必须先获取secret!");
+                return;
+            }
+            var url = `<xml>
+    <FromUserName>${open_id}</FromUserName>
+    <Number>${number}</Number>
+    <Email>${email}</Email>
+    <Content>${content}</Content>
+    <CreateTime>${create_time}</CreateTime>
+    <MsgType>text</MsgType>
+    <MsgId>${message_id}</MsgId>
+ </xml>`;
+            $("#text_message").text(url).show();
+        });
+
+        $("#btn_time").on('click', function() {
+            $("input[name=create_time]").val(new Date().getTime());
+        });
+
+        $("#btn_msg_id").on('click', function() {
+            $("input[name=message_id]").val(guid());
+        });
+
+        // 发送消息
+        $("#btn_send_message").click(function() {
+            var text_message = $("#text_message").text();
+            var timestamp = $("input[name=timestamp]").val();
+            var secret = $("input[name=secret]").val();
+            var email = $("input[name=email]").val();
+            var number = $("input[name=number]").val();
+            var data = {
+                timestamp: timestamp,
+                secret: secret,
+                email: email,
+                number: number,
+                content: text_message,
+            }
+            if (!text_message) {
+                alert("消息体为空!")
+                return;
+            }
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: "/weixin_api/send_message",
+                data: data,
+                async: false,
+                success: function (result, stauts) {
+                    console.log("result", result)
+                    $("#pre").text(JSON.stringify(result)).show();
+                },
+                error: function (err) {
+                    console.log("err", err)
+                    $("#pre").text(result).show();
+                }
+            });
+        });
+    });
+    </script>
+</body>
+
+</html>
