@@ -1,6 +1,6 @@
 var _ = require('underscore');
 var default_config = require('./default');
-var md5 = require('MD5');
+var md5 = require('md5');
 
 global.tojson = JSON.parse;
 global.md5 = md5;

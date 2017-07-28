@@ -5,7 +5,11 @@ var _ = require('underscore');
 var UUID = require('uuid');
 var sha1 = require('node-sha1');
 
-/* GET home page. */
+/**
+ * 客户身份认证
+ * @param 
+ * @return 
+ */
 router.get('/', function(req, res, next) {
 	web_token = UUID.v1();
 	nonce = UUID.v4();

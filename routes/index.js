@@ -4,7 +4,11 @@ var config = require('../config');
 var _ = require('underscore');
 var UUID = require('uuid');
 
-/* GET home page. */
+/**
+ * 网页插件基础配置
+ * @param 
+ * @return 
+ */
 router.get('/', function(req, res, next) {
 	var company_res = {
 		web_token: UUID.v1(),

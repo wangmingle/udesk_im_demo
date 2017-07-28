@@ -18,12 +18,12 @@
 
 <body style="height: 100%">
 	<div class="">
-        <div>
-            <a target="_blank" href="/" class="label label-success label-ali">1、网页插件基础配置</a>
+         <div>
+            <a target="_blank" id = "web_plugin" href="/" class="label label-success label-ali">1、网页插件基础配置</a>
             <p></p>
-            <a target="_blank" href="/customers" class="label label-default label-ali">2、客户身份认证</a>
+            <a target="_blank" id = "web_plugin" href="/customers" class="label label-default label-ali">2、客户身份认证</a>
             <p></p>
-            <a target="_blank" href="/weixin_api" class="label label-primary label-ali">3、微信API</a>
+            <a target="_blank" id = "web_plugin" href="/weixin_api" class="label label-primary label-ali">3、微信API</a>
         </div>
 	    <h2 class="text-center">网页插件基础配置Demo</h2>
         <br>
@@ -140,6 +140,16 @@ ud({
         console.log(localStorage)
 
     })
+    </script>
+    <script type="text/javascript">
+        var hostname = window.location.hostname;
+        if (hostname !== "localhost") {
+            $("a#web_plugin").each(function(){
+                console.log($(this).attr("href"))
+                _helf = "../udesk_im_demo" + $(this).attr("href")
+                $(this).attr("href", _helf)
+            });
+        }
     </script>
 </body>
 

@@ -11,7 +11,11 @@ var request = require('request');
 var qs = require('querystring');
 var ErrUtils = require('./../app/utils/err_util');
 
-/* GET users listing. */
+/**
+ * 微信消息API
+ * @param 
+ * @return 
+ */
 router.get('/', function(req, res, next) {
 	web_token = UUID.v1();
 	nonce = UUID.v4();
@@ -37,6 +41,11 @@ router.get('/', function(req, res, next) {
   res.render('weixin_api', {company_res: company_res});
 });
 
+/**
+ * 微信消息API 测试接收消息通道是否正常
+ * @param 
+ * @return 
+ */
 router.get('/test', function(req, res, next) {
 	res.type(tool_util.JSON_RESPONSE);
 	web_token = UUID.v1();
@@ -50,16 +59,18 @@ router.get('/test', function(req, res, next) {
 	callback_url = "http://" + config['company_domain'] + "/spa1/im_callback/test?number="+number+"&email="+email+"&timestamp="+timestamp+"&sign="+sign
 	console.log("send_message_url", callback_url);
 	tool_util.get(callback_url, {}, null, function(err, result) {
-		console.log("send_message_err", err);
 		console.log("send_message_res", result);
   	res.send(result);
 	});
 });
 
+/**
+ * 微信消息API Udesk接收文本消息
+ * @param 
+ * @return 
+ */
 router.post('/send_message', function(req, res, next) {
 	res.type(tool_util.JSON_RESPONSE);
-	console.log("=====================");
-	console.log(req.body);
 	params = req.body;
 	number = params['number'];
 	email = params['email'];
@@ -77,6 +88,5 @@ router.post('/send_message', function(req, res, next) {
 		res.send(200, result);
 	});
 });
-
 
 module.exports = router;
