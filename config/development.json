@@ -1,7 +1,7 @@
 {
-    "company_domain": "测试域名",
-    "company_code": "公司code",
+    "company_domain": "",
+    "company_code": "",
     "web_plugin_id": 0,
-    "im_user_key": "测试key",
-    "secret": "测试key"
+    "im_user_key": "",
+    "secret": ""
 }
